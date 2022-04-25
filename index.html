@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+             Chi-squared test Calculator
+        </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/favicon/generator/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/favicon/generator/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/favicon/generator/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/favicon/generator/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/favicon/generator/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/favicon/generator/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/favicon/generator/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/favicon/generator/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/generator/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="assets/favicon/generator/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/generator/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/generator/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/generator/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#B5CC18">
+    <meta name="msapplication-TileImage" content="assets/favicon/generator/ms-icon-144x144.png">
+    <meta name="theme-color" content="#B5CC18">
+    <link rel="manifest" href="./manifest.json">
+
+
+<link rel="stylesheet" href="styles/style.css" />
+        
+<link rel="stylesheet" href="vendors/semantic-ui/semantic.min.css" />
+
+<!-- <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" /> -->
+
+    </head>
+    <body>
+<script src="vendors/jquery/jquery.min.js"></script>
+<script src="vendors/semantic-ui/semantic.min.js"></script>
+<script src="vendors/puli-util.clipboard.js"></script>
+<!--
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+-->
+
+<script src="scripts/statistics-distributions.js"></script>
+<script src="vendors/jquery-ui/jquery-ui.js"></script>
+<script src="scripts/contigency-table.js"></script>
+<script src="scripts/drawPlainTable.js"></script>
+<script src="scripts/script.js"></script>
+
+<script src="scripts/data-persist-helper.js"></script>
+<script src="vendors/copy-helper.js"></script>
+
+<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+
+<!-- ------------------------------------------------------------ -->
+
+<form class="file-process-framework ui form">
+
+  <div class="ui ">
+    <div class="column">
+	<div class="ui segment">
+	
+    
+<h1 class="ui horizontal divider header">
+  Input
+</h1>
+
+
+<!-- ============================================= -->
+
+<div class="ui bottom attached active tab segment input-field-container">
+    
+    <!-- https://apps.lazza.dk/facebook/ -->
+
+    <div class="ui top attached tabular menu">
+        <div class="item" data-tab="mode_textarea">text box input</div>
+        <div class="active item" data-tab="mode_file">select file input</div>
+        <div class=" item" data-tab="mode_google_spreadsheet">Google Spreadsheet Post Link</div>
+    </div>
+    
+    <div class="ui bottom attached  tab segment" data-tab="mode_textarea">
+        <div class="field">
+            <label for="input_data">Please enter CSV data: one line per line</label>
+            <textarea class="change-trigger focus_select" 
+                      id="input_data"></textarea>
+        </div>
+    </div>
+    
+    <div class="ui bottom attached active tab segment" data-tab="mode_file">
+        <div class="field">
+            <label for="input_file">
+            Please upload the CSV file:
+                (<a href="data.csv" download>Sample file download
+</a>)
+            </label>
+            <input type="file" id="input_file" class="file-change-trigger" data-file-to-textarea="#input_data" />
+        </div>
+    </div>
+    
+    <div class="ui bottom attached  tab segment" data-tab="mode_google_spreadsheet">
+        <div class="field">
+            <label for="input_url">
+            Please enter the Google Spreadsheet post link   (<a href="http://www.ioa.tw/google-sheets-api-note.html" target="pub">Operation teaching</a>) 
+            </label>
+            <input type="text" id="input_url" class="google-spreadsheet-trigger focus_select" 
+                   data-sheet-selector="#input_url_sheet"
+                   data-file-to-textarea="#input_data"
+                   value="https://docs.google.com/spreadsheets/d/1DdtDGbZPUCjZj_ZLNca3vpsFeTSHQ1T7Grw-ZhiBudQ/pubhtml?gid=1050192646&single=true" />
+        </div> 
+        <!--
+        <div class="field">
+            <label for="input_url_sheet">
+                Please enter a sheet name:
+            </label>
+            <input type="text" id="input_url_sheet" class="change-trigger-input focus_select" 
+                   data-trigger-selector="#input_url"
+                   value="data" />
+        </div>
+        -->
+    </div>
+    
+</div>
+
+<!-- ============================= -->
+
+		</div> <!-- <div class="ui segment"> -->
+                
+        <div class="ui segment">
+	
+    
+<h1 class="ui horizontal divider header">
+  Contingency Table
+</h1>
+        <div class="ui segment" id="contingency_table">
+            <div class="contingency-table-col-plus">
+                <button type="button" class="ui button teal tiny">
+                    <i class="add square icon"></i>
+                Add column variable
+                </button>
+            </div>
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" colspan="2"></th>
+                        <th colspan="2" class="variable_x_th">
+                            <input type="text" value="Category column variables" id="variable_x_name" />
+                        </th>
+                    </tr>
+                    <tr class="variable_x_tr">
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="X1" class="variable_x" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="X2" class="variable_x" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th rowspan="2" class="variable_y_th">
+                            <input type="text" value="Category row variable" id="variable_y_name" />
+                        </th>
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="Y1" class="variable_y" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                        <td class="cell_td">
+                            <input type="text" value="35" class="vairable_cell" />
+                        </td>
+                        <td class="cell_td">
+                            <input type="text" value="20" class="vairable_cell" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="Y2" class="variable_y" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                        <td class="cell_td">
+                            <input type="text" value="45" class="vairable_cell" />
+                        </td>
+                        <td class="cell_td">
+                            <input type="text" value="40" class="vairable_cell" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="contingency-table-row-plus">
+                <button type="button" class="add-row ui button teal tiny">
+                    <i class="add square icon"></i>
+                    add Row variable
+                </button>
+                <button type="button" class="download-csv-contingency-table ui button teal tiny">
+                    <i class="download icon"></i>
+                    Download contingency table CSV
+                </button>
+                <button type="button" class="download-csv-anova-raw ui button teal tiny">
+                    <i class="download icon"></i>
+                    Download CSV (raw)
+                </button>
+                <button type="button" class="download-csv-anova-encoded ui button teal tiny">
+                    <i class="download icon"></i>
+                    Download CSV (encoded)
+                </button>
+                <button type="button" class="download-csv-friedman-test-y ui button teal tiny">
+                    <i class="download icon"></i>
+                    Download CSV (Friedman Test: Y variable)
+                </button>
+                <button type="button" class="download-csv-friedman-test-x ui button teal tiny">
+                    <i class="download icon"></i>
+                    Download CSV (Friedman Test: X variables)
+                </button>
+            </div>
+        </div>
+            
+        </div><!-- <div class="ui segment"> -->                
+
+  <!-- ------------------------------------------------- -->
+  
+  <div class="ui segment">
+	
+    
+<h1 class="ui horizontal divider header">
+  Display
+</h1> 
+    <!--
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" 
+                   class="change-trigger-draw data-persist-setting" 
+                   name="zero_adjust_row"
+                   id="zero_adjust_row" 
+                   checked="checked"
+                   value="zero_adjust_row"  />
+            <label for="zero_adjust_row">If there are columns with no values, add 0.5 to all counts。</label>
+        </div>
+    </div>
+    -->
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" 
+                   class="change-trigger-draw data-persist-setting" 
+                   name="input_display_percent"
+                   id="input_display_percent" 
+                   value="input_display_percent"  />
+            <label for="input_display_percent">Show percentage information。</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" 
+                   class="change-trigger-draw data-persist-setting" 
+                   name="input_enable_fisher"
+                   id="input_enable_fisher" 
+                   value="input_enable_fisher" checked="checked"  />
+            <label for="input_enable_fisher"> Use Fisher's correct probability test when(Fisher’s Exact Probability Test)：1. 2x2 contingency table; 2. The expected value of each category is less than 5; 3. The total number of rows and columns in
+            each category is less than 20。</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" 
+                   class="change-trigger-draw data-persist-setting" 
+                   name="input_enable_yates"
+                   id="input_enable_yates" 
+                   value="input_enable_yates" checked="checked"  />
+            <label for="input_enable_yates"> Use Yep's continuity correction when the following conditions are met(Yate's continuity correction)：1. 2x2 contingency table; 2. The expected value of each cell is less than 5; 3. The total number of samples exceeds 20。</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" 
+                   class="change-trigger-draw data-persist-setting" 
+                   name="input_table_style_display"
+                   id="input_table_style_display" 
+                   value="input_table_style_display"  />
+            <label for="input_table_style_display">Use unstyled tables (easy to copy to other files)</label>
+        </div>
+    </div>
+        </div><!-- <div class="ui segment"> -->    
+        
+        
+	</div> <!-- <div class="column"> -->
+  <!-- =============================== -->
+    <div class="column">
+  <div class="ui segment display-result" >
+  <!-- <div class="display-result"> -->
+  
+    <h1 class="ui horizontal divider header">
+      Result
+    </h1>
+    <div class="field" style="display: none;">
+      <button type="button" class="fluid ui large right labeled icon green button download-file">
+        <i class="right download icon"></i>
+        DOWNLOAD
+      </button>
+    </div>
+
+    <div class="field" style="display: none;">
+      <label for="filename">File Name: </label>
+      <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
+    </div>
+    
+    <div class="field">
+      <label for="preview">
+        <button type="button" id="copy_source_code" class="hide">Copy Source Code</button>
+        <div class="ui pointing below  medium blue basic label encoding" style="margin-left: 1em; display: none;">
+          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        </div>
+      </label>
+        
+      <textarea id="preview" 
+                style="display: none;"
+                class="preview hide focus_select" ></textarea>
+    </div>
+	
+  <div id="preview_html" class="ui segment" ></div>
+  
+  
+  </div>
+    </div> <!-- <div class="column"> -->
+  </div> <!-- <div class="ui two column doubling grid"> -->
+</form>
+
+<!-- ------------------------------------------------------------ -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37178375-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<script src="./scripts/service-worker-loader.js"></script>
+    </body>
+</html>
